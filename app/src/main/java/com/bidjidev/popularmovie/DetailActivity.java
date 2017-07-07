@@ -16,57 +16,65 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import uk.co.senab.photoview.PhotoView;
 
 public class DetailActivity extends AppCompatActivity {
-    public static TextView txtRilis,txtRate,txtOverview;
-    public static ImageView imgMoviePoster,imgPosterbig;
+    public static TextView txtRilis, txtRate, txtOverview;
+    public static ImageView imgMoviePoster, imgPosterbig;
     public static GetMovie movie;
     static String movie_poster_url;
     static String movie_posterbig_url;
     public static Intent intent;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
     private LayoutInflater inflater;
     static Context con;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         initComponents();
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(movie.getOriginal_title());
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               shareText(movie.overview,movie.title);
+                shareText(movie.overview, movie.title);
             }
         });
         initComponents();
         setValues();
         popupimg();
     }
-    public void initComponents(){
+
+    public void initComponents() {
         movie = new GetMovie();
         DetailActivity.intent = this.getIntent();
-        int movie_id = intent.getIntExtra("movie_id",0);
-        int movie_position = intent.getIntExtra("movie_position",0);
+        int movie_id = intent.getIntExtra("movie_id", 0);
+        int movie_position = intent.getIntExtra("movie_position", 0);
         movie = MainActivity.getMovie.get(movie_position);
-        txtRilis = (TextView)findViewById(R.id.txtYear);
-        txtRate = (TextView)findViewById(R.id.txtRate);
-        imgMoviePoster = (ImageView)findViewById(R.id.imgPoster);
-        imgPosterbig = (ImageView)findViewById(R.id.imgPosterbig);
-        txtOverview = (TextView)findViewById(R.id.txtOverView);
+        txtRilis = (TextView) findViewById(R.id.txtYear);
+        txtRate = (TextView) findViewById(R.id.txtRate);
+        imgMoviePoster = (ImageView) findViewById(R.id.imgPoster);
+        imgPosterbig = (ImageView) findViewById(R.id.imgPosterbig);
+        txtOverview = (TextView) findViewById(R.id.txtOverView);
     }
-    public static void setValues(){
-        txtRilis.setText( movie.getRelease_date());
+
+    public static void setValues() {
+        txtRilis.setText(movie.getRelease_date());
         txtRate.setText(movie.getVote_average() + "/10");
         txtOverview.setText(movie.getOverview());
         if (movie.getPoster_path() == Server.IMAGE_NOT_FOUND) {
             movie_poster_url = Server.IMAGE_NOT_FOUND;
             movie_posterbig_url = Server.IMAGE_NOT_FOUND;
-        }else {
+        } else {
             movie_poster_url = Server.IMAGE_URL + Server.IMAGE_SIZE_185 + "/" + movie.getPoster_path();
             movie_posterbig_url = Server.IMAGE_URL + Server.IMAGE_SIZE_185 + "/" + movie.getBackdrop_path();
         }
@@ -76,7 +84,8 @@ public class DetailActivity extends AppCompatActivity {
 
 
     }
-    private void shareText(String textToShare,String tittle) {
+
+    private void shareText(String textToShare, String tittle) {
 
         String mimeType = "text/plain";
 
@@ -86,9 +95,10 @@ public class DetailActivity extends AppCompatActivity {
                 .from(this)
                 .setType(mimeType)
                 .setChooserTitle("share to:")
-                .setText("Tittle:"+ title + "\n"+ "Over View:" + textToShare)
+                .setText("Tittle:" + title + "\n" + "Over View:" + textToShare)
                 .startChooser();
     }
+
     public void popupimg() {
         imgMoviePoster.setOnClickListener(new View.OnClickListener() {
             @Override

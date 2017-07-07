@@ -2,6 +2,7 @@ package com.bidjidev.popularmovie;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -15,21 +16,30 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by You on 6/29/17.
  */
 
 public class MoviesTask extends AsyncTask<String, Void, String> {
+    public static String sortingCriteria;
+    String url;
     @Override
-    protected String doInBackground(String... params) {
+    public String doInBackground(String... params) {
 
         if (params.length == 0) {
             return null;
         }
-        String sortingCriteria = params[0];
+        sortingCriteria = params[0];
+        Log.d(TAG, "doInBackground: "+sortingCriteria);;
+        if (sortingCriteria.equals("popular")){
+            url = "http://api.themoviedb.org/3/movie/"+"popular"+"?";
+        }else{
+            url = "http://api.themoviedb.org/3/movie/"+"top_rated"+"?";
 
-        Uri builtUri = Uri.parse(Server.Based_URL).buildUpon()
-                .appendQueryParameter("sort_by", sortingCriteria + ".desc")
+        }
+        Uri builtUri = Uri.parse(url).buildUpon()
                 .appendQueryParameter("api_key", Server.API_KEY)
                 .appendQueryParameter("page", String.valueOf(MainActivity.page))
                 .build();
@@ -113,8 +123,8 @@ public class MoviesTask extends AsyncTask<String, Void, String> {
         InputStream inputStream;
         StringBuffer buffer;
         HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-        String moviesJson = null;
+        BufferedReader bufReader = null;
+        String jsonMovie = null;
 
         try {
             URL url = new URL(builtUri.toString());
@@ -128,33 +138,33 @@ public class MoviesTask extends AsyncTask<String, Void, String> {
             if (inputStream == null) {
                 return null;
             }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
+            bufReader = new BufferedReader(new InputStreamReader(inputStream));
 
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = bufReader.readLine()) != null) {
                 buffer.append(line + "\n");
             }
 
             if (buffer.length() == 0) {
                 return null;
             }
-            moviesJson = buffer.toString();
+            jsonMovie = buffer.toString();
         } catch (IOException e) {
             return null;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
-            if (reader != null) {
+            if (bufReader != null) {
                 try {
-                    reader.close();
+                    bufReader.close();
                 } catch (final IOException e) {
 
                 }
             }
         }
 
-        return moviesJson;
+        return jsonMovie;
     }
 }
 

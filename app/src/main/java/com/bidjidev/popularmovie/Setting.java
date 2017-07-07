@@ -1,5 +1,6 @@
 package com.bidjidev.popularmovie;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -22,9 +23,7 @@ public class Setting extends PreferenceActivity
         preference.setOnPreferenceChangeListener(this);
 
         onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
+                PreferenceManager.getDefaultSharedPreferences(preference.getContext()).getString(preference.getKey(), ""));
 
 
     }
@@ -47,6 +46,6 @@ public class Setting extends PreferenceActivity
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        MainActivity.page =1;
+        startActivity(new Intent(getApplicationContext(),MainActivity.class));
     }
 }

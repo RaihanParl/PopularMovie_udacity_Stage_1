@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Page:"
+            android:text="@string/Page"
             android:textSize="25sp" />
 
         <TextView
@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="jump to:"
+        android:text="@string/Jump_to"
         android:textSize="25sp" />
 
     <EditText
@@ -50,6 +50,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/edPage"
         android:onClick="oJump"
-        android:text="Jump" />
+        android:text="@string/Jump" />
 
 </RelativeLayout>
